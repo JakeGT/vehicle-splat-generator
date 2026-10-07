@@ -1,0 +1,29 @@
+services:
+  vehicle-splat:
+    build: .
+    image: vehicle-splat:latest
+    restart: unless-stopped
+    # As your WSL user, so the files under ./data are yours rather than root's.
+    user: "${UID:-1000}:${GID:-1000}"
+    # Local only: there is no sign-in, so the page is not published beyond this machine.
+    # From Windows, open http://localhost:8000 (WSL forwards it).
+    ports:
+      - "127.0.0.1:8000:8000"
+    volumes:
+      # Jobs, models and Imagin's cached renders, readable from WSL.
+      - ./data:/data
+      # Uncomment to let "Publish to the portal" copy models straight into the CRM
+      # checkout (the path is this machine's):
+      # - ${HOME}/Projects/CRM/crm/apps/portal/public/models:/portal-models
+    environment:
+      IMAGIN_CUSTOMER: uk-vanaways
+      # Somewhere writable for library caches, as a user with no home in the image.
+      HOME: /tmp
+      # PORTAL_MODELS_DIR: /portal-models
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]

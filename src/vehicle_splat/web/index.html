@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Vehicle splat</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="top">
+    <h1>Vehicle splat</h1>
+    <span id="gpu" class="chip">Checking the GPU…</span>
+  </header>
+
+  <main>
+    <form id="lookup" class="card lookup" autocomplete="off">
+      <label>CAP id
+        <input id="capId" name="capId" inputmode="numeric" pattern="[0-9]+" required placeholder="58438">
+      </label>
+      <label><span>Paint id <span class="muted">(optional)</span></span>
+        <input id="paintId" name="paintId" pattern="[A-Za-z0-9_-]{1,40}" placeholder="Imagin's default">
+      </label>
+      <button type="submit" id="show">Show the van</button>
+    </form>
+
+    <section id="van" class="card" hidden>
+      <h2 id="vanTitle"></h2>
+      <p id="vanStatus" class="muted"></p>
+      <h3>The 360° spin <span class="muted" id="spinCount"></span></h3>
+      <p class="muted">What the splat is mostly made from: a full turn from about the van's own height.</p>
+      <div id="spin" class="grid spin"></div>
+      <h3>Imagin's other views <span class="muted" id="viewCount"></span></h3>
+      <p class="muted">Views from above add what the spin cannot see: the roof and the tops of the panels.
+        Codes that only repeat Imagin's default view are dimmed and never used.</p>
+      <div id="views" class="grid views"></div>
+
+      <form id="generate" class="options">
+        <fieldset>
+          <legend>Imagin's other views</legend>
+          <label><input type="radio" name="extraViews" value="above" checked> From above <span class="muted">(recommended)</span></label>
+          <label><input type="radio" name="extraViews" value="all"> All of them</label>
+          <label><input type="radio" name="extraViews" value="none"> None: the spin alone</label>
+        </fieldset>
+        <label>Training steps
+          <input id="steps" type="number" min="500" max="100000" step="500" value="15000">
+        </label>
+        <label><span>Most splats <span class="muted">(32 bytes each)</span></span>
+          <input id="maxSplats" type="number" min="10000" max="1000000" step="10000" value="150000">
+        </label>
+        <button type="submit" id="start">Generate splat</button>
+      </form>
+    </section>
+
+    <section id="job" class="card" hidden>
+      <div class="job-head">
+        <h2 id="jobTitle"></h2>
+        <span id="jobStatus" class="pill"></span>
+      </div>
+      <ol id="stages" class="stages"></ol>
+      <div id="trainingBox" class="training" hidden>
+        <div class="bar"><div id="bar"></div></div>
+        <p id="trainingText" class="muted"></p>
+      </div>
+      <p id="jobError" class="error" hidden></p>
+      <div id="result" hidden>
+        <video id="preview" controls loop muted playsinline></video>
+        <div class="facts">
+          <div><h3>The spin's camera</h3><p id="cameraText"></p></div>
+          <div><h3>Files</h3><ul id="files" class="files"></ul>
+            <button type="button" id="publish" hidden>Publish to the portal</button>
+            <p id="publishText" class="muted"></p>
+          </div>
+        </div>
+        <div id="viewsResult" hidden>
+          <h3>The other views, as placed</h3>
+          <table><thead><tr><th>View</th><th>Yaw</th><th>Elevation</th><th>Outline fit</th><th>Used</th></tr></thead>
+            <tbody id="viewRows"></tbody></table>
+        </div>
+        <p class="muted">The .splat opens as it is in a browser splat viewer: drag it onto
+          <a href="https://superspl.at/editor" target="_blank" rel="noopener">SuperSplat</a>.
+          For the portal, copy the .json and .splat into <code>apps/portal/public/models/</code>.</p>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Recent jobs</h2>
+      <ul id="jobs" class="jobs"><li class="muted">None yet.</li></ul>
+    </section>
+  </main>
+  <script src="app.js" type="module"></script>
+</body>
+</html>
